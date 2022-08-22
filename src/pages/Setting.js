@@ -11,7 +11,7 @@ const Setting = () => {
           height: '100%',
         }}
       >
-        <Stack alignItems='center'>
+        <Stack alignItems='center' sx={{ pt: 10 }}>
           <Typography fontSize={64} fontFamily={'Michroma'} color='white'>
             ARTIST
           </Typography>
