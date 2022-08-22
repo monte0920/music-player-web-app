@@ -23,7 +23,7 @@ const MusicProgressBar = styled(LinearProgress)(() => ({
 }));
 
 const Control = (props) => {
-  const { playing, toggle, audio } = props;
+  const { playing, toggle, audio, speed } = props;
   const [currentTime, setCurrentTime] = useState(0)
 
   useEffect(() => {
@@ -34,9 +34,7 @@ const Control = (props) => {
     }
   }, [audio])
 
-
-  // const [progress, setProgress] = React.useState(30);
-  const progress = currentTime / audio.duration * 100;
+  const progress = currentTime / (audio.duration || 1) * 100;
 
   return (
     <Stack sx={{ py: 3, height: '15%' }} alignItems='center' spacing={2}>
@@ -51,7 +49,7 @@ const Control = (props) => {
           }
         }}
       >
-        <IconButton>
+        <IconButton onClick={() => speed('slow')}>
           <FaFastBackward />
         </IconButton>
         <IconButton
@@ -67,7 +65,7 @@ const Control = (props) => {
               <PauseCircleIcon /> : <PlayCircleIcon />
           }
         </IconButton>
-        <IconButton>
+        <IconButton onClick={() => speed('fast')}>
           <FaFastForward />
         </IconButton>
       </Stack>
