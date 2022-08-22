@@ -32,6 +32,10 @@ const Home = () => {
       }
     }
 
+    const updateTime = (time) => {
+      audio.currentTime = time;
+    }
+
     useEffect(() => {
       if (playing) {
         audio.play().catch((error) => {
@@ -54,10 +58,10 @@ const Home = () => {
       };
     }, [audio]);
 
-    return [playing, toggle, speed];
+    return [playing, toggle, speed, updateTime];
   };
 
-  const [playing, toggle, speed] = useAudio();
+  const [playing, toggle, speed, updateTime] = useAudio();
 
   return (
     <Stack
@@ -67,7 +71,7 @@ const Home = () => {
       }}
     >
       <Setting />
-      <Control playing={playing} toggle={toggle} audio={audio} speed={speed} />
+      <Control playing={playing} toggle={toggle} audio={audio} speed={speed} updateTime={updateTime} />
     </Stack>
   )
 }
