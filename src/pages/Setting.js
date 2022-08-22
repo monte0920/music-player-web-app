@@ -45,17 +45,26 @@ const Setting = () => {
                       alignItems='center'
                       sx={{
                         width: '15%',
-                        '& button': {
-                          background: 'transparent',
+                      }}
+                    >
+                      <Button
+                        onClick={() => setDrum(item.id)}
+                        sx={{
+                          background: item.id == drum ? "white" : 'transparent',
                           width: 47,
                           height: 47,
                           minWidth: 0,
                           borderRadius: 47,
-                          border: '1px solid white'
-                        }
-                      }}
-                    >
-                      <Button></Button>
+                          border: '1px solid white',
+                          color: 'white',
+                          '&:hover': {
+                            background: '#ffffffe0'
+                          },
+                          '&:active': {
+                            background: 'white'
+                          }
+                        }}
+                      ></Button>
                       <Typography color={'rgba(255, 255, 255, 0.5)'} fontSize={12} fontWeight={700} fontFamily={'Inter'}>{item.title}</Typography>
                     </Stack>
                   )
@@ -74,18 +83,27 @@ const Setting = () => {
                       spacing={2}
                       alignItems='center'
                       sx={{
-                        width: '15%',
-                        '& button': {
-                          background: 'transparent',
+                        width: '15%'
+                      }}
+                    >
+                      <Button
+                        onClick={() => setGuitar(item.id)}
+                        sx={{
+                          background: item.id == guitar ? "white" : 'transparent',
                           width: 47,
                           height: 47,
                           minWidth: 0,
                           borderRadius: 47,
-                          border: '1px solid white'
-                        }
-                      }}
-                    >
-                      <Button></Button>
+                          border: '1px solid white',
+                          color: 'white',
+                          '&:hover': {
+                            background: '#ffffffe0'
+                          },
+                          '&:active': {
+                            background: 'white'
+                          }
+                        }}
+                      ></Button>
                       <Typography textAlign='center' color={'rgba(255, 255, 255, 0.5)'} fontSize={12} fontWeight={700} fontFamily={'Inter'}>{item.title}</Typography>
                     </Stack>
                   )
@@ -104,18 +122,27 @@ const Setting = () => {
                       spacing={2}
                       alignItems='center'
                       sx={{
-                        width: '15%',
-                        '& button': {
-                          background: 'transparent',
+                        width: '15%'
+                      }}
+                    >
+                      <Button
+                        onClick={() => setSynth(item.id)}
+                        sx={{
+                          background: item.id == synth ? "white" : 'transparent',
                           width: 47,
                           height: 47,
                           minWidth: 0,
                           borderRadius: 47,
-                          border: '1px solid white'
-                        }
-                      }}
-                    >
-                      <Button></Button>
+                          border: '1px solid white',
+                          color: 'white',
+                          '&:hover': {
+                            background: '#ffffffe0'
+                          },
+                          '&:active': {
+                            background: 'white'
+                          }
+                        }}
+                      ></Button>
                       <Typography color={'rgba(255, 255, 255, 0.5)'} fontSize={12} fontWeight={700} fontFamily={'Inter'}>{item.title}</Typography>
                     </Stack>
                   )
