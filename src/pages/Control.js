@@ -25,7 +25,7 @@ const Control = () => {
   const progress = 30;
 
   return (
-    <Stack sx={{ pb: 5 }} alignItems='center' spacing={2}>
+    <Stack sx={{ py: 3, height: '15%' }} alignItems='center' spacing={2}>
       <Stack
         direction='row'
         spacing={1}
