@@ -10,7 +10,7 @@ const Setting = () => {
   const [synth, setSynth] = useState()
 
   return (
-    <Stack sx={{ height: '85%', width: 585, pt: 5 }}>
+    <Stack sx={{ height: '84%', width: 585}}>
       <Stack sx={{ height: '100%', overflow: 'auto' }}>
         <Stack
           justifyContent='center'

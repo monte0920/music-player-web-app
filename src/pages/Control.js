@@ -21,7 +21,7 @@ const Control = (props) => {
   }, [audio])
 
   return (
-    <Stack sx={{ py: 3, height: '15%' }} alignItems='center' spacing={2}>
+    <Stack sx={{ mt: '1%', height: '15%' }} alignItems='center' spacing={1}>
       <Stack
         direction='row'
         spacing={1}
