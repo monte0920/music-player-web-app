@@ -15,10 +15,10 @@ const Setting = () => {
         <Stack
           justifyContent='center'
           sx={{
-            py: '50%'
+            py: '60%'
           }}
         >
-          <Stack alignItems='center' sx={{ pt: 5 }}>
+          <Stack alignItems='center' sx={{ pt: 10 }}>
             <Typography fontSize={64} fontFamily={'Michroma'} color='white'>
               ARTIST
             </Typography>

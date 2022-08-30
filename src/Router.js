@@ -7,6 +7,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
 
 const history = createBrowserHistory({
     basename: "",
@@ -20,6 +21,7 @@ const AppRouter = () => {
                 <Switch>
                     <Layout>
                         <Route path="/" exact component={Home} />
+                        <Route path="/login" exact component={Login} />
                     </Layout>
                 </Switch>
             </Suspense>

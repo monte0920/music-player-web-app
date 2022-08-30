@@ -4,6 +4,7 @@ import Setting from './Setting'
 import Control from './Control'
 
 import _audio from '../assets/audio/1.mp3';
+import ThreeBg from "../components/Background";
 const audio = new Audio(_audio);
 
 const Home = () => {
@@ -70,6 +71,7 @@ const Home = () => {
         height: '100%'
       }}
     >
+      <ThreeBg />
       <Setting />
       <Control playing={playing} toggle={toggle} audio={audio} speed={speed} updateTime={updateTime} />
     </Stack>
