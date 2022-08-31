@@ -8,6 +8,7 @@ import { createBrowserHistory } from "history";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 const history = createBrowserHistory({
     basename: "",
@@ -21,6 +22,7 @@ const AppRouter = () => {
                 <Switch>
                     <Layout>
                         <Route path="/" exact component={Home} />
+                        <Route path="/admin" exact component={Admin} />
                         <Route path="/login" exact component={Login} />
                     </Layout>
                 </Switch>
