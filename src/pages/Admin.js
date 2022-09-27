@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
@@ -8,6 +8,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import AdminSetting from "./AdminSetting";
 
 const Admin = () => {
+    const [file, setFile] = useState(null);
+    console.log(file);
+
     return (
         <Stack
             sx={{
@@ -28,7 +31,7 @@ const Admin = () => {
             <Stack spacing={5} alignItems="center">
                 <Stack
                     sx={{
-                        pt: 12,
+                        py: 12,
                         width: 500,
                     }}
                     spacing={5}
@@ -43,11 +46,11 @@ const Admin = () => {
                         </Typography>
                         <Stack spacing={1} alignItems="center">
                             <Button variant="outlined" component="label">
-                                Upload
+                                {file ? file.name || "Upload" : "Upload"}
                                 <input
+                                    onChange={(e) => setFile(e.target.files[0])}
                                     hidden
                                     accept="image/*"
-                                    multiple
                                     type="file"
                                 />
                             </Button>
@@ -262,6 +265,14 @@ const Admin = () => {
                         </Stack>
                     </Stack>
                     <AdminSetting />
+                    <Stack alignItems="center" pt={2}>
+                        <Button
+                            variant="outlined"
+                            sx={{ width: "fit-content" }}
+                        >
+                            SET MUSIC
+                        </Button>
+                    </Stack>
                 </Stack>
             </Stack>
         </Stack>
