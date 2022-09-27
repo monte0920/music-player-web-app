@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { SETTINGS } from "../config";
 
-const Setting = () => {
+const AdminSetting = () => {
   const [drum, setDrum] = useState()
   const [guitar, setGuitar] = useState()
   const [synth, setSynth] = useState()
@@ -156,4 +156,4 @@ const Setting = () => {
   )
 }
 
-export default Setting;
+export default AdminSetting;
