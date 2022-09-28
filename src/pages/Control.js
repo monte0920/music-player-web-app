@@ -9,16 +9,9 @@ import { FaFastBackward, FaFastForward } from 'react-icons/all'
 import { formatSecondsAsTime } from "../config";
 
 const Control = (props) => {
-  const { playing, toggle, audio, speed, updateTime } = props;
+  const { playing, toggle, duration } = props;
   const [currentTime, setCurrentTime] = useState(0)
 
-  useEffect(() => {
-    if (audio) {
-      audio.addEventListener('timeupdate', () => {
-        setCurrentTime(audio.currentTime)
-      })
-    }
-  }, [audio])
 
   return (
     <Stack sx={{ mt: '1%', height: '15%' }} alignItems='center' spacing={1}>
@@ -33,7 +26,7 @@ const Control = (props) => {
           }
         }}
       >
-        <IconButton onClick={() => speed('slow')}>
+        <IconButton>
           <FaFastBackward />
         </IconButton>
         <IconButton
@@ -49,7 +42,7 @@ const Control = (props) => {
               <PauseCircleIcon /> : <PlayCircleIcon />
           }
         </IconButton>
-        <IconButton onClick={() => speed('fast')}>
+        <IconButton>
           <FaFastForward />
         </IconButton>
       </Stack>
@@ -61,8 +54,8 @@ const Control = (props) => {
           value={currentTime}
           min={0}
           step={1}
-          max={audio.duration || 1}
-          onChange={(_, value) => updateTime(value)}
+          max={duration}
+          onChange={(_, value) => console.log(value)}
           sx={{
             width: 350,
             color: '#D9D9D9',
@@ -87,7 +80,7 @@ const Control = (props) => {
             },
           }}
         />
-        <Typography fontSize={12} color='white'>{formatSecondsAsTime(audio.duration || 0) || '00:00'}</Typography>
+        <Typography fontSize={12} color='white'>{formatSecondsAsTime(duration) || '00:00'}</Typography>
       </Stack>
     </Stack >
   )

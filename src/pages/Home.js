@@ -1,88 +1,115 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Stack from "@mui/material/Stack";
 import EventEmitter from "event-emitter";
 import WaveformPlaylist from "waveform-playlist";
+import * as Tone from "tone";
 
 import Setting from "./Setting";
 import Control from "./Control";
 
-import _audio from "../assets/audio/1.mp3";
 import ThreeBg from "../components/Background";
-const audio = new Audio(_audio);
 
 const Home = () => {
-    const useAudio = () => {
-        const [playing, setPlaying] = useState(false);
-        const [playBackRate, setPlayBackRate] = useState(1);
+    const [ee] = useState(new EventEmitter());
+    const toneCtx = Tone.getContext();
+    const setUpChain = useRef();
+    const [player, setPlayer] = useState(null);
+    const [playing, setPlaying] = useState(false);
 
-        const toggle = () => {
-            setPlaying(!playing);
-        };
+    const container = useCallback(
+        async (node) => {
+            if (node !== null && toneCtx !== null) {
+                const playlist = WaveformPlaylist(
+                    {
+                        ac: toneCtx.rawContext,
+                        container: node,
+                        zoomLevels: [100, 300, 500],
+                    },
+                    ee
+                );
 
-        const speed = (type) => {
-            if (type == "fast") {
-                if (playBackRate < 2) {
-                    setPlayBackRate(playBackRate + 0.25);
-                } else {
-                    setPlayBackRate(1);
-                }
-            }
-            if (type == "slow") {
-                if (playBackRate <= 0.25) {
-                    setPlayBackRate(1);
-                } else {
-                    setPlayBackRate(playBackRate - 0.25);
-                }
-            }
-        };
-
-        const updateTime = (time) => {
-            audio.currentTime = time;
-        };
-
-        useEffect(() => {
-            if (playing) {
-                audio.play().catch((error) => {
-                    console.log(error);
+                ee.on("audiorenderingstarting", function (offlineCtx, a) {
+                    // Set Tone offline to render effects properly.
+                    const offlineContext = new Tone.OfflineContext(offlineCtx);
+                    Tone.setContext(offlineContext);
+                    setUpChain.current = a;
                 });
-            } else {
-                audio.pause();
+
+                await playlist.load([
+                    {
+                        src: "1.mp3",
+                        effects: function (
+                            graphEnd,
+                            masterGainNode,
+                            isOffline
+                        ) {
+                            const reverb = new Tone.Reverb(1.2);
+
+                            if (isOffline) {
+                                setUpChain.current.push(reverb.ready);
+                            }
+
+                            Tone.connect(graphEnd, reverb);
+                            Tone.connect(reverb, masterGainNode);
+
+                            return function cleanup() {
+                                reverb.disconnect();
+                                reverb.dispose();
+                            };
+                        },
+                    },
+                    {
+                        src: "2.mp3",
+                        effects: function (
+                            graphEnd,
+                            masterGainNode,
+                            isOffline
+                        ) {
+                            const reverb = new Tone.Reverb(1.2);
+
+                            if (isOffline) {
+                                setUpChain.current.push(reverb.ready);
+                            }
+
+                            Tone.connect(graphEnd, reverb);
+                            Tone.connect(reverb, masterGainNode);
+
+                            return function cleanup() {
+                                reverb.disconnect();
+                                reverb.dispose();
+                            };
+                        },
+                    },
+                ]);
+
+                setPlayer(playlist);
             }
-        }, [playing, audio]);
+        },
+        [ee, toneCtx]
+    );
 
-        useEffect(() => {
-            audio.playbackRate = playBackRate;
-        }, [playBackRate, audio]);
-
-        useEffect(() => {
-            audio.addEventListener("ended", () => setPlaying(false));
-
-            return () => {
-                audio.removeEventListener("ended", () => setPlaying(false));
-            };
-        }, [audio]);
-
-        return [playing, toggle, speed, updateTime];
+    const toggle = () => {
+        setPlaying(!playing);
     };
 
-    const [player, setPlayer] = useState(null);
-    console.log(player)
-    useEffect(() => {
-        const playlist = WaveformPlaylist(
-            {
-                container: document.querySelector(".playlist"),
-            },
+    const handlePlayMusic = () => {
+        ee.emit("play");
+    };
 
-            // you can pass your own event emitter
-            EventEmitter()
-        );
-        // retrieves the event emitter the playlist is using.
-        const ee = playlist.getEventEmitter();
-        setPlayer(ee)
-        ee.__ee__.play()
-    }, []);
+    const handleStopMusic = () => {
+        ee.emit("stop");
+        console.log(player);
+    };
 
-    const [playing, toggle, speed, updateTime] = useAudio();
+    const handlePauseMusic = () => {
+        ee.emit("pause");
+        console.log(player);
+    };
+
+    const handleTestMusic = () => {
+        ee.emit("continuousplay", 50);
+        console.log(player);
+    };
 
     return (
         <Stack
@@ -91,16 +118,18 @@ const Home = () => {
                 height: "100%",
             }}
         >
+            <button onClick={handlePlayMusic}>Play</button>
+            <button onClick={handlePauseMusic}>Pause</button>
+            <button onClick={handleStopMusic}>Stop</button>
+            <button onClick={handleTestMusic}>Test</button>
             <ThreeBg />
             <Setting />
             <Control
                 playing={playing}
                 toggle={toggle}
-                audio={audio}
-                speed={speed}
-                updateTime={updateTime}
+                duration={player ? player.duration : 0}
             />
-            <Stack className="playlist"></Stack>
+            <Stack ref={container} sx={{ display: "none" }}></Stack>
         </Stack>
     );
 };
