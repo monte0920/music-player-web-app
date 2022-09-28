@@ -15,6 +15,7 @@ const Home = () => {
     const setUpChain = useRef();
     const [player, setPlayer] = useState(null);
     const [playing, setPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
 
     const container = useCallback(
         async (node) => {
@@ -58,28 +59,28 @@ const Home = () => {
                             };
                         },
                     },
-                    {
-                        src: "2.mp3",
-                        effects: function (
-                            graphEnd,
-                            masterGainNode,
-                            isOffline
-                        ) {
-                            const reverb = new Tone.Reverb(1.2);
+                    // {
+                    //     src: "2.mp3",
+                    //     effects: function (
+                    //         graphEnd,
+                    //         masterGainNode,
+                    //         isOffline
+                    //     ) {
+                    //         const reverb = new Tone.Reverb(1.2);
 
-                            if (isOffline) {
-                                setUpChain.current.push(reverb.ready);
-                            }
+                    //         if (isOffline) {
+                    //             setUpChain.current.push(reverb.ready);
+                    //         }
 
-                            Tone.connect(graphEnd, reverb);
-                            Tone.connect(reverb, masterGainNode);
+                    //         Tone.connect(graphEnd, reverb);
+                    //         Tone.connect(reverb, masterGainNode);
 
-                            return function cleanup() {
-                                reverb.disconnect();
-                                reverb.dispose();
-                            };
-                        },
-                    },
+                    //         return function cleanup() {
+                    //             reverb.disconnect();
+                    //             reverb.dispose();
+                    //         };
+                    //     },
+                    // },
                 ]);
 
                 setPlayer(playlist);
@@ -88,27 +89,37 @@ const Home = () => {
         [ee, toneCtx]
     );
 
+    useEffect(() => {
+        let timer;
+
+        if (player) {
+            if (playing) {
+                ee.emit("play", currentTime);
+                timer = setInterval(() => {
+                    if (player.playbackSeconds) {
+                        setCurrentTime(player.playbackSeconds);
+                    } else {
+                        setCurrentTime(0);
+                        setPlaying(false);
+                    }
+                }, 1000);
+            } else {
+                ee.emit("pause");
+            }
+        }
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, [playing]);
+
+    const updateTime = (_time) => {
+        if (playing) ee.emit("play", _time);
+        setCurrentTime(_time);
+    };
+
     const toggle = () => {
         setPlaying(!playing);
-    };
-
-    const handlePlayMusic = () => {
-        ee.emit("play");
-    };
-
-    const handleStopMusic = () => {
-        ee.emit("stop");
-        console.log(player);
-    };
-
-    const handlePauseMusic = () => {
-        ee.emit("pause");
-        console.log(player);
-    };
-
-    const handleTestMusic = () => {
-        ee.emit("continuousplay", 50);
-        console.log(player);
     };
 
     return (
@@ -118,15 +129,13 @@ const Home = () => {
                 height: "100%",
             }}
         >
-            <button onClick={handlePlayMusic}>Play</button>
-            <button onClick={handlePauseMusic}>Pause</button>
-            <button onClick={handleStopMusic}>Stop</button>
-            <button onClick={handleTestMusic}>Test</button>
             <ThreeBg />
             <Setting />
             <Control
                 playing={playing}
                 toggle={toggle}
+                currentTime={currentTime}
+                updateTime={updateTime}
                 duration={player ? player.duration : 0}
             />
             <Stack ref={container} sx={{ display: "none" }}></Stack>
