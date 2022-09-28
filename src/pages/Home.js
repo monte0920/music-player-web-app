@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import Stack from "@mui/material/Stack";
 import EventEmitter from "event-emitter";
 import WaveformPlaylist from "waveform-playlist";
@@ -6,6 +12,7 @@ import * as Tone from "tone";
 
 import Setting from "./Setting";
 import Control from "./Control";
+import { SETTINGS } from "../config";
 
 import ThreeBg from "../components/Background";
 
@@ -16,6 +23,21 @@ const Home = () => {
     const [player, setPlayer] = useState(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
+    const [drum, setDrum] = useState(SETTINGS.drum[2].id);
+    const [guitar, setGuitar] = useState(SETTINGS.guitar[2].id);
+    const [synth, setSynth] = useState(SETTINGS.synth[2].id);
+
+    const drumMusic = useMemo(() => {
+        switch (drum) {
+            case "offbeat":
+                return "2.mp3";
+            case "filled":
+                return "1.mp3";
+
+            default:
+                return "1.mp3";
+        }
+    }, [drum]);
 
     const container = useCallback(
         async (node) => {
@@ -38,7 +60,7 @@ const Home = () => {
 
                 await playlist.load([
                     {
-                        src: "1.mp3",
+                        src: drumMusic,
                         effects: function (
                             graphEnd,
                             masterGainNode,
@@ -59,34 +81,12 @@ const Home = () => {
                             };
                         },
                     },
-                    // {
-                    //     src: "2.mp3",
-                    //     effects: function (
-                    //         graphEnd,
-                    //         masterGainNode,
-                    //         isOffline
-                    //     ) {
-                    //         const reverb = new Tone.Reverb(1.2);
-
-                    //         if (isOffline) {
-                    //             setUpChain.current.push(reverb.ready);
-                    //         }
-
-                    //         Tone.connect(graphEnd, reverb);
-                    //         Tone.connect(reverb, masterGainNode);
-
-                    //         return function cleanup() {
-                    //             reverb.disconnect();
-                    //             reverb.dispose();
-                    //         };
-                    //     },
-                    // },
                 ]);
 
                 setPlayer(playlist);
             }
         },
-        [ee, toneCtx]
+        [ee, toneCtx, drumMusic]
     );
 
     useEffect(() => {
@@ -130,7 +130,14 @@ const Home = () => {
             }}
         >
             <ThreeBg />
-            <Setting />
+            <Setting
+                drum={drum}
+                synth={synth}
+                guitar={guitar}
+                setDrum={setDrum}
+                setSynth={setSynth}
+                setGuitar={setGuitar}
+            />
             <Control
                 playing={playing}
                 toggle={toggle}
