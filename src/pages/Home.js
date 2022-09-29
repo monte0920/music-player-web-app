@@ -15,6 +15,7 @@ import Control from "./Control";
 import { SETTINGS } from "../config";
 
 import ThreeBg from "../components/Background";
+import API, { SERVER_URL } from "../utils/api";
 
 const Home = () => {
     const [ee] = useState(new EventEmitter());
@@ -26,18 +27,26 @@ const Home = () => {
     const [drum, setDrum] = useState(SETTINGS.drum[2].id);
     const [guitar, setGuitar] = useState(SETTINGS.guitar[2].id);
     const [synth, setSynth] = useState(SETTINGS.synth[2].id);
+    const [musics, setMusics] = useState([]);
 
-    const drumMusic = useMemo(() => {
-        switch (drum) {
-            case "offbeat":
-                return "2.mp3";
-            case "filled":
-                return "1.mp3";
-
-            default:
-                return "1.mp3";
+    const handleFetchMusics = async () => {
+        const res = await API(`get`, `music`);
+        if (res.data) {
+            setMusics(res.data);
         }
-    }, [drum]);
+    };
+
+    const ordered = useMemo(() => {
+        let obj = {};
+        for (let i = 0; i < musics.length; i++) {
+            obj[musics[i].type] = musics[i].file_name;
+        }
+        return obj;
+    }, [musics]);
+
+    useEffect(() => {
+        handleFetchMusics();
+    }, []);
 
     const container = useCallback(
         async (node) => {
@@ -58,35 +67,51 @@ const Home = () => {
                     setUpChain.current = a;
                 });
 
-                await playlist.load([
-                    {
-                        src: drumMusic,
-                        effects: function (
-                            graphEnd,
-                            masterGainNode,
-                            isOffline
-                        ) {
-                            const reverb = new Tone.Reverb(1.2);
+                const tool = {
+                    src: "",
+                    effects: function (graphEnd, masterGainNode, isOffline) {
+                        const reverb = new Tone.Reverb(1.2);
 
-                            if (isOffline) {
-                                setUpChain.current.push(reverb.ready);
-                            }
+                        if (isOffline) {
+                            setUpChain.current.push(reverb.ready);
+                        }
 
-                            Tone.connect(graphEnd, reverb);
-                            Tone.connect(reverb, masterGainNode);
+                        Tone.connect(graphEnd, reverb);
+                        Tone.connect(reverb, masterGainNode);
 
-                            return function cleanup() {
-                                reverb.disconnect();
-                                reverb.dispose();
-                            };
-                        },
+                        return function cleanup() {
+                            reverb.disconnect();
+                            reverb.dispose();
+                        };
                     },
-                ]);
+                };
+
+                const lists = [];
+
+                if (ordered[drum])
+                    lists.push({
+                        ...tool,
+                        src: `${SERVER_URL}musics/${ordered[drum]}`,
+                    });
+
+                if (ordered[guitar])
+                    lists.push({
+                        ...tool,
+                        src: `${SERVER_URL}musics/${ordered[guitar]}`,
+                    });
+
+                if (ordered[synth])
+                    lists.push({
+                        ...tool,
+                        src: `${SERVER_URL}musics/${ordered[synth]}`,
+                    });
+
+                await playlist.load(lists);
 
                 setPlayer(playlist);
             }
         },
-        [ee, toneCtx, drumMusic]
+        [ee, toneCtx, drum, guitar, synth, ordered]
     );
 
     useEffect(() => {
