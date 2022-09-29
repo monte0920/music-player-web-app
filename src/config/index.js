@@ -1,61 +1,78 @@
+export const SERVER_URL = "http://localhost:8080/";
+
 export const SETTINGS = {
     drum: [
         {
-            id: 'offbeat', title: 'OFFBEAT'
+            id: "offbeat",
+            title: "OFFBEAT",
         },
         {
-            id: 'halftime', title: 'HALF TIME'
+            id: "halftime",
+            title: "HALF TIME",
         },
         {
-            id: 'filled', title: 'FILLED'
+            id: "filled",
+            title: "FILLED",
         },
         {
-            id: 'lessmore', title: 'LESS IS MORE'
+            id: "lessmore",
+            title: "LESS IS MORE",
         },
         {
-            id: 'basic', title: 'BASIC'
-        }
+            id: "basic",
+            title: "BASIC",
+        },
     ],
     guitar: [
         {
-            id: 'lightdistortion', title: 'LIGHT DISTORTION'
+            id: "lightdistortion",
+            title: "LIGHT DISTORTION",
         },
         {
-            id: 'lessdistortion', title: 'LESS DISTORTION'
+            id: "lessdistortion",
+            title: "LESS DISTORTION",
         },
         {
-            id: 'milddistortion', title: 'MILD DISTORTION'
+            id: "milddistortion",
+            title: "MILD DISTORTION",
         },
         {
-            id: 'moredistortion', title: 'MORE DISTORTION'
+            id: "moredistortion",
+            title: "MORE DISTORTION",
         },
         {
-            id: 'heavydistortion', title: 'HEAVY DISTORTION'
-        }
+            id: "heavydistortion",
+            title: "HEAVY DISTORTION",
+        },
     ],
     synth: [
         {
-            id: 'wavy', title: 'WAVY'
+            id: "wavy",
+            title: "WAVY",
         },
         {
-            id: 'square', title: 'SQUARE'
+            id: "square",
+            title: "SQUARE",
         },
         {
-            id: 'bassy', title: 'BASSY'
+            id: "bassy",
+            title: "BASSY",
         },
         {
-            id: 'vibrate', title: 'VIBRATE'
+            id: "vibrate",
+            title: "VIBRATE",
         },
         {
-            id: 'wonky', title: 'WONKY'
-        }
-    ]
-}
+            id: "wonky",
+            title: "WONKY",
+        },
+    ],
+};
 
 export function formatSecondsAsTime(secs) {
     let hr = Math.floor(secs / 3600);
-    let min = Math.floor((secs - (hr * 3600)) / 60);
-    let sec = Math.floor(secs - (hr * 3600) - (min * 60));
+    let min = Math.floor((secs - hr * 3600) / 60);
+    let sec = Math.floor(secs - hr * 3600 - min * 60);
 
     if (min < 10) {
         min = `0${min}`;

@@ -6,15 +6,22 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import AdminSetting from "./AdminSetting";
+import { SERVER_URL } from "../config";
 
 const Admin = () => {
     const [file, setFile] = useState(null);
-    console.log(file);
+    const [type, setType] = useState("");
+    const [instrument, setInstrument] = useState("");
+
+    const handleUpload = () => {
+        if (!file) return alert("Choose correct file", "warning");
+
+        SERVER_URL;
+    };
 
     return (
         <Stack
             sx={{
-                height: "100%",
                 background: "#F8F8F8",
             }}
         >
@@ -264,7 +271,9 @@ const Admin = () => {
                             </Stack>
                         </Stack>
                     </Stack>
-                    <AdminSetting />
+                    <AdminSetting
+                        {...{ type, setInstrument, setType }}
+                    />
                     <Stack alignItems="center" pt={2}>
                         <Button
                             variant="outlined"

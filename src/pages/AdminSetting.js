@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { SETTINGS } from "../config";
 
-const AdminSetting = () => {
-    const [setting, setSetting] = useState();
+const AdminSetting = (props) => {
+    const { type, setInstrument, setType } = props;
 
     return (
         <Stack sx={{ width: 500 }}>
@@ -23,9 +23,7 @@ const AdminSetting = () => {
                 >
                     DEFAULT SETTINGS
                 </Typography>
-                <Stack
-                    spacing={10}
-                >
+                <Stack spacing={10}>
                     <Stack spacing={3}>
                         <Typography
                             letterSpacing={0.05}
@@ -48,10 +46,13 @@ const AdminSetting = () => {
                                         }}
                                     >
                                         <Button
-                                            onClick={() => setSetting(item.id)}
+                                            onClick={() => {
+                                                setInstrument("drum");
+                                                setType(item.id);
+                                            }}
                                             sx={{
                                                 background:
-                                                    item.id == setting
+                                                    item.id == type
                                                         ? "#1D1B8C"
                                                         : "transparent",
                                                 width: 47,
@@ -71,7 +72,7 @@ const AdminSetting = () => {
                                         <Typography
                                             textAlign="center"
                                             color={
-                                                item.id == setting
+                                                item.id == type
                                                     ? "#1D1B8C"
                                                     : "rgba(46, 46, 46, 0.5)"
                                             }
@@ -109,10 +110,13 @@ const AdminSetting = () => {
                                         }}
                                     >
                                         <Button
-                                            onClick={() => setSetting(item.id)}
+                                            onClick={() => {
+                                                setInstrument("guitar");
+                                                setType(item.id);
+                                            }}
                                             sx={{
                                                 background:
-                                                    item.id == setting
+                                                    item.id == type
                                                         ? "#1D1B8C"
                                                         : "transparent",
                                                 width: 47,
@@ -132,7 +136,7 @@ const AdminSetting = () => {
                                         <Typography
                                             textAlign="center"
                                             color={
-                                                item.id == setting
+                                                item.id == type
                                                     ? "#1D1B8C"
                                                     : "rgba(46, 46, 46, 0.5)"
                                             }
@@ -170,10 +174,13 @@ const AdminSetting = () => {
                                         }}
                                     >
                                         <Button
-                                            onClick={() => setSetting(item.id)}
+                                            onClick={() => {
+                                                setInstrument("synth");
+                                                setType(item.id);
+                                            }}
                                             sx={{
                                                 background:
-                                                    item.id == setting
+                                                    item.id == type
                                                         ? "#1D1B8C"
                                                         : "transparent",
                                                 width: 47,
@@ -192,7 +199,7 @@ const AdminSetting = () => {
                                         ></Button>
                                         <Typography
                                             color={
-                                                item.id == setting
+                                                item.id == type
                                                     ? "#1D1B8C"
                                                     : "rgba(46, 46, 46, 0.5)"
                                             }
