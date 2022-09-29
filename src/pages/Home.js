@@ -51,6 +51,9 @@ const Home = () => {
     const container = useCallback(
         async (node) => {
             if (node !== null && toneCtx !== null) {
+                ee.emit("clear");
+                setCurrentTime(0);
+
                 const playlist = WaveformPlaylist(
                     {
                         ac: toneCtx.rawContext,
