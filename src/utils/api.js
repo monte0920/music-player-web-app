@@ -1,6 +1,6 @@
 import axios from 'axios';
-// export const SERVER_URL = 'http://localhost:8080/';
-export const SERVER_URL = 'https://music.api.zlp.rasta.finance/';
+export const SERVER_URL = 'http://localhost:8080/';
+// export const SERVER_URL = 'https://music.api.zlp.rasta.finance/';
 
 const API = async (method = 'GET', url, data = {}) => {
     try {

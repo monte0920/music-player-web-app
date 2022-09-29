@@ -6,17 +6,25 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import AdminSetting from "./AdminSetting";
-import { SERVER_URL } from "../config";
+import API from "../utils/api";
 
 const Admin = () => {
     const [file, setFile] = useState(null);
     const [type, setType] = useState("");
     const [instrument, setInstrument] = useState("");
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
         if (!file) return alert("Choose correct file", "warning");
+        if (!type) return alert("Select instrument", "warning");
+        if (!instrument) return alert("Select instrument", "warning");
 
-        SERVER_URL;
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("type", type);
+        formData.append("instrument", instrument);
+
+        const res = await API(`POST`, `music`, formData);
+        console.log(res);
     };
 
     return (
@@ -57,7 +65,7 @@ const Admin = () => {
                                 <input
                                     onChange={(e) => setFile(e.target.files[0])}
                                     hidden
-                                    accept="image/*"
+                                    accept="audio/*"
                                     type="file"
                                 />
                             </Button>
@@ -271,13 +279,12 @@ const Admin = () => {
                             </Stack>
                         </Stack>
                     </Stack>
-                    <AdminSetting
-                        {...{ type, setInstrument, setType }}
-                    />
+                    <AdminSetting {...{ type, setInstrument, setType }} />
                     <Stack alignItems="center" pt={2}>
                         <Button
                             variant="outlined"
                             sx={{ width: "fit-content" }}
+                            onClick={handleUpload}
                         >
                             SET MUSIC
                         </Button>
