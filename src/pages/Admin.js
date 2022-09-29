@@ -22,6 +22,15 @@ const Admin = () => {
         }
     };
 
+    const handleDeleteMusic = async (id) => {
+        const res = await API(`delete`, `music/${id}`);
+        
+        if (res.data) {
+            alert("Removed successfully", "success");
+            setMusics(res.data);
+        }
+    };
+
     useEffect(() => {
         handleFetchMusics();
     }, []);
@@ -38,6 +47,7 @@ const Admin = () => {
 
         const res = await API(`POST`, `music`, formData);
         if (res.data) {
+            alert("Added successfully", "success");
             setMusics(res.data);
         }
     };
@@ -140,7 +150,15 @@ const Admin = () => {
                                                 fontWeight={500}
                                                 color="rgba(46, 46, 46, 0.5)"
                                             >
-                                                GUITARLIGHT.mp3
+                                                {String(
+                                                    `${
+                                                        item.instrument +
+                                                        item.type
+                                                    }`
+                                                ).toUpperCase()}
+                                                {String(item.file_name).slice(
+                                                    -4
+                                                )}
                                             </Typography>
                                             <Typography
                                                 fontSize={12}
@@ -155,7 +173,12 @@ const Admin = () => {
                                             </Typography>
                                         </Stack>
                                         <Stack>
-                                            <IconButton aria-label="delete">
+                                            <IconButton
+                                                aria-label="delete"
+                                                onClick={() =>
+                                                    handleDeleteMusic(item.id)
+                                                }
+                                            >
                                                 <CloseIcon />
                                             </IconButton>
                                         </Stack>
