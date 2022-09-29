@@ -94,7 +94,6 @@ const AdminSetting = (props) => {
                             fontWeight={900}
                             color="rgba(46, 46, 46, 0.75)"
                             fontFamily={"Inter"}
-                            sx={{ ml: 2 }}
                         >
                             GUITAR LEAD
                         </Typography>
@@ -158,7 +157,6 @@ const AdminSetting = (props) => {
                             fontWeight={900}
                             color="rgba(46, 46, 46, 0.75)"
                             fontFamily={"Inter"}
-                            sx={{ ml: 2 }}
                         >
                             SYNTH STYLE
                         </Typography>
