@@ -1,3 +1,9 @@
+export const InstrumentType = {
+    guitar: "GUITAR LEAD",
+    drum: "DRUM PATTERN",
+    synth: "SYNTH STYLE",
+};
+
 export const SETTINGS = {
     drum: [
         {
