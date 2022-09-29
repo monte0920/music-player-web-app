@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
@@ -7,11 +7,24 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import AdminSetting from "./AdminSetting";
 import API from "../utils/api";
+import { InstrumentType } from "../config";
 
 const Admin = () => {
     const [file, setFile] = useState(null);
     const [type, setType] = useState("");
     const [instrument, setInstrument] = useState("");
+    const [musics, setMusics] = useState([]);
+
+    const handleFetchMusics = async () => {
+        const res = await API(`get`, `music`);
+        if (res.data) {
+            setMusics(res.data);
+        }
+    };
+
+    useEffect(() => {
+        handleFetchMusics();
+    }, []);
 
     const handleUpload = async () => {
         if (!file) return alert("Choose correct file", "warning");
@@ -24,7 +37,9 @@ const Admin = () => {
         formData.append("instrument", instrument);
 
         const res = await API(`POST`, `music`, formData);
-        console.log(res);
+        if (res.data) {
+            setMusics(res.data);
+        }
     };
 
     return (
@@ -106,176 +121,46 @@ const Admin = () => {
                                 </Typography>
                             </Stack>
                             <Stack>
-                                <Stack direction="row">
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="space-between"
-                                        sx={{
-                                            width: "500px",
-                                            px: 1,
-                                            py: 1.5,
-                                            background: "#FFFFFF",
-                                            borderBottom:
-                                                "1px solid rgba(0, 0, 0, 0.1)",
-                                        }}
-                                    >
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
+                                {musics.map((item, index) => (
+                                    <Stack direction="row" key={index}>
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            sx={{
+                                                width: "500px",
+                                                px: 1,
+                                                py: 1.5,
+                                                background: "#FFFFFF",
+                                                borderBottom:
+                                                    "1px solid rgba(0, 0, 0, 0.1)",
+                                            }}
                                         >
-                                            GUITARLIGHT.mp3
-                                        </Typography>
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITAR LEAD
-                                        </Typography>
+                                            <Typography
+                                                fontSize={12}
+                                                fontWeight={500}
+                                                color="rgba(46, 46, 46, 0.5)"
+                                            >
+                                                GUITARLIGHT.mp3
+                                            </Typography>
+                                            <Typography
+                                                fontSize={12}
+                                                fontWeight={500}
+                                                color="rgba(46, 46, 46, 0.5)"
+                                            >
+                                                {
+                                                    InstrumentType[
+                                                        item.instrument
+                                                    ]
+                                                }
+                                            </Typography>
+                                        </Stack>
+                                        <Stack>
+                                            <IconButton aria-label="delete">
+                                                <CloseIcon />
+                                            </IconButton>
+                                        </Stack>
                                     </Stack>
-                                    <Stack>
-                                        <IconButton aria-label="delete">
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </Stack>
-                                </Stack>
-                                <Stack direction="row">
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="space-between"
-                                        sx={{
-                                            width: "500px",
-                                            px: 1,
-                                            py: 1.5,
-                                            background: "#FFFFFF",
-                                            borderBottom:
-                                                "1px solid rgba(0, 0, 0, 0.1)",
-                                        }}
-                                    >
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITARLIGHT.mp3
-                                        </Typography>
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITAR LEAD
-                                        </Typography>
-                                    </Stack>
-                                    <Stack>
-                                        <IconButton aria-label="delete">
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </Stack>
-                                </Stack>
-                                <Stack direction="row">
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="space-between"
-                                        sx={{
-                                            width: "500px",
-                                            px: 1,
-                                            py: 1.5,
-                                            background: "#FFFFFF",
-                                            borderBottom:
-                                                "1px solid rgba(0, 0, 0, 0.1)",
-                                        }}
-                                    >
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITARLIGHT.mp3
-                                        </Typography>
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITAR LEAD
-                                        </Typography>
-                                    </Stack>
-                                    <Stack>
-                                        <IconButton aria-label="delete">
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </Stack>
-                                </Stack>
-                                <Stack direction="row">
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="space-between"
-                                        sx={{
-                                            width: "500px",
-                                            px: 1,
-                                            py: 1.5,
-                                            background: "#FFFFFF",
-                                            borderBottom:
-                                                "1px solid rgba(0, 0, 0, 0.1)",
-                                        }}
-                                    >
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITARLIGHT.mp3
-                                        </Typography>
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITAR LEAD
-                                        </Typography>
-                                    </Stack>
-                                    <Stack>
-                                        <IconButton aria-label="delete">
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </Stack>
-                                </Stack>
-                                <Stack direction="row">
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="space-between"
-                                        sx={{
-                                            width: "500px",
-                                            px: 1,
-                                            py: 1.5,
-                                            background: "#FFFFFF",
-                                            borderBottom:
-                                                "1px solid rgba(0, 0, 0, 0.1)",
-                                        }}
-                                    >
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITARLIGHT.mp3
-                                        </Typography>
-                                        <Typography
-                                            fontSize={12}
-                                            fontWeight={500}
-                                            color="rgba(46, 46, 46, 0.5)"
-                                        >
-                                            GUITAR LEAD
-                                        </Typography>
-                                    </Stack>
-                                    <Stack>
-                                        <IconButton aria-label="delete">
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </Stack>
-                                </Stack>
+                                ))}
                             </Stack>
                         </Stack>
                     </Stack>
