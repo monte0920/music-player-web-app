@@ -30,9 +30,13 @@ const Home = () => {
     const [musics, setMusics] = useState([]);
 
     const handleFetchMusics = async () => {
-        const res = await API(`get`, `music`);
-        if (res.data) {
-            setMusics(res.data);
+        try {
+            const res = await API(`get`, `music`);
+            if (res.data) {
+                setMusics(res.data);
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
