@@ -16,15 +16,19 @@ const Admin = () => {
     const [musics, setMusics] = useState([]);
 
     const handleFetchMusics = async () => {
-        const res = await API(`get`, `music`);
-        if (res.data) {
-            setMusics(res.data);
+        try {
+            const res = await API(`get`, `music`);
+            if (res.data) {
+                setMusics(res.data);
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
     const handleDeleteMusic = async (id) => {
         const res = await API(`delete`, `music/${id}`);
-        
+
         if (res.data) {
             alert("Removed successfully", "success");
             setMusics(res.data);
