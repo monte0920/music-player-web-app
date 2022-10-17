@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Stack from "@mui/material/Stack";
 import EventEmitter from "event-emitter";
 import WaveformPlaylist from "waveform-playlist";
@@ -28,7 +22,7 @@ const Home = () => {
     const [guitar, setGuitar] = useState(SETTINGS.guitar[2].id);
     const [synth, setSynth] = useState(SETTINGS.synth[2].id);
     const [musics, setMusics] = useState([]);
-
+    console.log(player);
     const handleFetchMusics = async () => {
         try {
             const res = await API(`get`, `music`);
@@ -40,14 +34,6 @@ const Home = () => {
         }
     };
 
-    const ordered = useMemo(() => {
-        let obj = {};
-        for (let i = 0; i < musics.length; i++) {
-            obj[musics[i].type] = musics[i].file_name;
-        }
-        return obj;
-    }, [musics]);
-
     useEffect(() => {
         handleFetchMusics();
     }, []);
@@ -55,8 +41,8 @@ const Home = () => {
     const container = useCallback(
         async (node) => {
             if (node !== null && toneCtx !== null) {
-                ee.emit("clear");
-                setCurrentTime(0);
+                // ee.emit("clear");
+                // setCurrentTime(0);
 
                 const playlist = WaveformPlaylist(
                     {
@@ -75,7 +61,6 @@ const Home = () => {
                 });
 
                 const tool = {
-                    src: "",
                     effects: function (graphEnd, masterGainNode, isOffline) {
                         const reverb = new Tone.Reverb(1.2);
 
@@ -93,32 +78,45 @@ const Home = () => {
                     },
                 };
 
-                const lists = [];
+                const lists = musics.map((item) => {
+                    const muted = () => {
+                        if (
+                            `${item.instrument}-${item.type}` ==
+                            `drum-${drum}`
+                        ) {
+                            return false;
+                        }
 
-                if (ordered[drum])
-                    lists.push({
-                        ...tool,
-                        src: `${SERVER_URL}musics/${ordered[drum]}`,
-                    });
+                        if (
+                            `${item.instrument}-${item.type}` ==
+                            `guitar-${guitar}`
+                        ) {
+                            return false;
+                        }
 
-                if (ordered[guitar])
-                    lists.push({
-                        ...tool,
-                        src: `${SERVER_URL}musics/${ordered[guitar]}`,
-                    });
+                        if (
+                            `${item.instrument}-${item.type}` ==
+                            `synth-${synth}`
+                        ) {
+                            return false;
+                        }
+                        return true;
+                    };
 
-                if (ordered[synth])
-                    lists.push({
+                    return {
                         ...tool,
-                        src: `${SERVER_URL}musics/${ordered[synth]}`,
-                    });
+                        src: `${SERVER_URL}musics/${item.file_name}`,
+                        name: `${item.instrument}-${item.type}`,
+                        muted: muted(),
+                    };
+                });
 
                 await playlist.load(lists);
 
                 setPlayer(playlist);
             }
         },
-        [ee, toneCtx, drum, guitar, synth, ordered]
+        [ee, toneCtx, drum, guitar, synth, musics]
     );
 
     useEffect(() => {
