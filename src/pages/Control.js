@@ -9,7 +9,8 @@ import { FaFastBackward, FaFastForward } from "react-icons/all";
 import { formatSecondsAsTime } from "../config";
 
 const Control = (props) => {
-    const { playing, toggle, duration, currentTime, updateTime } = props;
+    const { playing, toggle, fastToggle, duration, currentTime, updateTime } =
+        props;
 
     return (
         <Stack sx={{ mt: "1%", height: "15%" }} alignItems="center" spacing={1}>
@@ -24,7 +25,7 @@ const Control = (props) => {
                     },
                 }}
             >
-                <IconButton>
+                <IconButton onClick={() => fastToggle("back")}>
                     <FaFastBackward />
                 </IconButton>
                 <IconButton
@@ -38,7 +39,7 @@ const Control = (props) => {
                 >
                     {playing ? <PauseCircleIcon /> : <PlayCircleIcon />}
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => fastToggle("fast")}>
                     <FaFastForward />
                 </IconButton>
             </Stack>

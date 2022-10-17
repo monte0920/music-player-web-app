@@ -22,7 +22,62 @@ const Home = () => {
     const [guitar, setGuitar] = useState(SETTINGS.guitar[2].id);
     const [synth, setSynth] = useState(SETTINGS.synth[2].id);
     const [musics, setMusics] = useState([]);
-    console.log(player);
+
+    const handleDrum = (_drum) => {
+        if (drum == _drum) return;
+
+        const track = player.tracks.find((item) => item.name == `drum-${drum}`);
+        const newtrack = player.tracks.find(
+            (item) => item.name == `drum-${_drum}`
+        );
+
+        if (track) {
+            ee.emit("mute", track);
+        }
+        if (newtrack) {
+            ee.emit("mute", newtrack);
+        }
+        setDrum(_drum);
+    };
+
+    const handleGuiter = (_guiter) => {
+        if (guitar == _guiter) return;
+
+        const track = player.tracks.find(
+            (item) => item.name == `guitar-${guitar}`
+        );
+        const newtrack = player.tracks.find(
+            (item) => item.name == `guitar-${_guiter}`
+        );
+
+        if (track) {
+            ee.emit("mute", track);
+        }
+        if (newtrack) {
+            ee.emit("mute", newtrack);
+        }
+        setGuitar(_guiter);
+    };
+
+    const handleSynth = (_synth) => {
+        if (synth == _synth) return;
+
+        const track = player.tracks.find(
+            (item) => item.name == `synth-${synth}`
+        );
+        const newtrack = player.tracks.find(
+            (item) => item.name == `synth-${_synth}`
+        );
+
+        if (track) {
+            ee.emit("mute", track);
+        }
+        if (newtrack) {
+            ee.emit("mute", newtrack);
+        }
+        setSynth(_synth);
+    };
+
     const handleFetchMusics = async () => {
         try {
             const res = await API(`get`, `music`);
@@ -34,6 +89,10 @@ const Home = () => {
         }
     };
 
+    const handleFast = (type) => {
+        ee.emit(type == "fast" ? "fastforward" : "rewind");
+    };
+
     useEffect(() => {
         handleFetchMusics();
     }, []);
@@ -41,9 +100,6 @@ const Home = () => {
     const container = useCallback(
         async (node) => {
             if (node !== null && toneCtx !== null) {
-                // ee.emit("clear");
-                // setCurrentTime(0);
-
                 const playlist = WaveformPlaylist(
                     {
                         ac: toneCtx.rawContext,
@@ -81,8 +137,7 @@ const Home = () => {
                 const lists = musics.map((item) => {
                     const muted = () => {
                         if (
-                            `${item.instrument}-${item.type}` ==
-                            `drum-${drum}`
+                            `${item.instrument}-${item.type}` == `drum-${drum}`
                         ) {
                             return false;
                         }
@@ -116,7 +171,7 @@ const Home = () => {
                 setPlayer(playlist);
             }
         },
-        [ee, toneCtx, drum, guitar, synth, musics]
+        [ee, toneCtx, musics]
     );
 
     useEffect(() => {
@@ -164,18 +219,21 @@ const Home = () => {
                 drum={drum}
                 synth={synth}
                 guitar={guitar}
-                setDrum={setDrum}
-                setSynth={setSynth}
-                setGuitar={setGuitar}
+                setDrum={handleDrum}
+                setSynth={handleSynth}
+                setGuitar={handleGuiter}
             />
             <Control
                 playing={playing}
                 toggle={toggle}
                 currentTime={currentTime}
                 updateTime={updateTime}
+                fastToggle={handleFast}
                 duration={player ? player.duration : 0}
             />
-            <Stack ref={container} sx={{ display: "none" }}></Stack>
+            {musics.length && (
+                <Stack ref={container} sx={{ display: "none" }}></Stack>
+            )}
         </Stack>
     );
 };
