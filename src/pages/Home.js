@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import Stack from "@mui/material/Stack";
 import EventEmitter from "event-emitter";
 import WaveformPlaylist from "waveform-playlist";
@@ -22,6 +28,47 @@ const Home = () => {
     const [guitar, setGuitar] = useState(SETTINGS.guitar[2].id);
     const [synth, setSynth] = useState(SETTINGS.synth[2].id);
     const [musics, setMusics] = useState([]);
+
+    const playingTracks = useMemo(() => {
+        if (!player) return [];
+
+        const filterdTracks = player.tracks.filter((item) => {
+            if (item.name == `drum-${drum}`) {
+                return true;
+            }
+
+            if (item.name == `guitar-${guitar}`) {
+                return true;
+            }
+
+            if (item.name == `synth-${synth}`) {
+                return true;
+            }
+            return false;
+        });
+
+        const list = filterdTracks.map((item) => {
+            return item.peaks?.data[0];
+        });
+
+        const maxLen = () => {
+            const len =
+                list[0].length > list[1].length
+                    ? list[0].length
+                    : list[1].length;
+
+            return list[2]?.length > len ? list[2]?.length : len;
+        };
+
+        let arr = [];
+        for (let i = 0; i < maxLen(); i++) {
+            let _n = list[0] ? (list[0].length > i + 1 ? list[0][i] : 0) : 0;
+            _n += list[1] ? (list[1].length > i + 1 ? list[1][i] : 0) : 0;
+            _n += list[2] ? (list[2].length > i + 1 ? list[2][i] : 0) : 0;
+            arr.push(_n);
+        }
+        return arr;
+    }, [player, drum, guitar, synth]);
 
     const handleDrum = (_drum) => {
         if (drum == _drum) return;
@@ -214,7 +261,12 @@ const Home = () => {
                 height: "100%",
             }}
         >
-            <ThreeBg playing={playing} />
+            <ThreeBg
+                playing={playing}
+                currentTime={currentTime}
+                playingTracks={playingTracks}
+                duration={player ? player.duration : 0}
+            />
             <Setting
                 drum={drum}
                 synth={synth}
