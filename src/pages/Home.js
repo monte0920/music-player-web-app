@@ -214,7 +214,7 @@ const Home = () => {
                 height: "100%",
             }}
         >
-            <ThreeBg />
+            <ThreeBg playing={playing} />
             <Setting
                 drum={drum}
                 synth={synth}
