@@ -16,36 +16,41 @@ const Detect = () => {
     camera.position.z = 30;
 };
 
-const MyGroup = (props) => {
-    const [widthSegments, setwidthSegments] = useState(32);
-    const { playing, playingTracks, currentTime, duration } = props;
+const initialData = {
+    radius: 15,
+    widthSegments: 32,
+    heightSegments: 16,
+    phiStart: 0,
+    phiLength: twoPi,
+    thetaStart: 0,
+    thetaLength: Math.PI,
+};
 
-    const data = {
-        radius: 15,
-        widthSegments: 32,
-        heightSegments: 16,
-        phiStart: 0,
-        phiLength: twoPi,
-        thetaStart: 0,
-        thetaLength: Math.PI,
-    };
+const MyGroup = (props) => {
+    const [data, setData] = useState(initialData);
+    const { playing, playingTracks, currentTime, duration } = props;
 
     useEffect(() => {
         let timer;
         let _ct = currentTime;
         if (playing) {
             timer = setInterval(() => {
-                setwidthSegments(
-                    widthSegments +
-                        (playingTracks[ 
-                            parseInt(
-                                playingTracks.length * (_ct / duration),
-                                10
-                            )
-                        ] / 10000 || 0)
-                );
+                const _n =
+                    playingTracks[
+                        parseInt(playingTracks.length * (_ct / duration), 10)
+                    ] / 10000 || 0;
+
+                setData((prev) => ({
+                    ...prev,
+                    widthSegments: initialData.widthSegments + _n,
+                    phiLength: initialData.phiLength + _n,
+                    thetaStart: initialData.thetaStart + _n,
+                    thetaLength: initialData.thetaLength + _n,
+                }));
                 _ct += 1 / (playingTracks.length / duration);
             }, 1000 / (playingTracks.length / duration));
+        } else {
+            setData(initialData);
         }
 
         return () => {
@@ -59,7 +64,7 @@ const MyGroup = (props) => {
         return new WireframeGeometry(
             new SphereGeometry(
                 data.radius,
-                widthSegments,
+                data.widthSegments,
                 data.heightSegments,
                 data.phiStart,
                 data.phiLength,
@@ -67,19 +72,19 @@ const MyGroup = (props) => {
                 data.thetaLength
             )
         );
-    }, [widthSegments]);
+    }, [data]);
 
     const meshGeometry = useMemo(() => {
         return new SphereGeometry(
             data.radius,
-            widthSegments,
+            data.widthSegments,
             data.heightSegments,
             data.phiStart,
             data.phiLength,
             data.thetaStart,
             data.thetaLength
         );
-    }, [widthSegments]);
+    }, [data]);
 
     useFrame(() => {
         groupRef.current.rotation.x += 0.005;
