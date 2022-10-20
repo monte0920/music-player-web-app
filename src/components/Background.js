@@ -43,18 +43,22 @@ const MyGroup = (props) => {
                     ] / 100000 || 0
                 );
 
+                const _ws = insts.Iguitar + insts.Isynth;
+
                 setData((prev) => ({
                     ...prev,
                     widthSegments:
                         initialData.widthSegments +
-                        _n +
-                        (insts.Isynth + insts.Iguitar) / 10,
+                        (_s ? Math.abs(_n) + _ws : -(Math.abs(_n) + _ws)) +
+                        (insts.Iguitar + insts.Isynth),
                     // phiLength: initialData.phiLength + _n,
                     thetaStart:
-                        (_s ? 0 : Math.PI) + Math.abs(_n + insts.Idrum / 10),
+                        (_s ? 0 : Math.PI) +
+                        Math.abs(_n * (1 + insts.Idrum / 10)),
+
                     thetaLength:
                         initialData.thetaLength -
-                        Math.abs(_n + insts.Idrum / 10),
+                        Math.abs(_n * (1 + insts.Idrum / 10)) * 2,
                 }));
                 _ct += 2 / (playingTracks.length / duration);
                 _s = !_s;

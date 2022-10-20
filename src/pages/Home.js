@@ -66,9 +66,15 @@ const Home = () => {
 
         let arr = [];
         for (let i = 0; i < maxLen(); i++) {
-            let _n = list[0] ? (list[0].length > i + 1 ? list[0][i] : 0) : 0;
-            _n += list[1] ? (list[1].length > i + 1 ? list[1][i] : 0) : 0;
-            _n += list[2] ? (list[2].length > i + 1 ? list[2][i] : 0) : 0;
+            let _n = Math.abs(
+                list[0] ? (list[0].length > i + 1 ? list[0][i] : 0) : 0
+            );
+            _n += Math.abs(
+                list[1] ? (list[1].length > i + 1 ? list[1][i] : 0) : 0
+            );
+            _n += Math.abs(
+                list[2] ? (list[2].length > i + 1 ? list[2][i] : 0) : 0
+            );
             arr.push(_n);
         }
         return arr;
