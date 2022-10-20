@@ -24,10 +24,14 @@ const Home = () => {
     const [player, setPlayer] = useState(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    const [drum, setDrum] = useState(SETTINGS.drum[2].id);
-    const [guitar, setGuitar] = useState(SETTINGS.guitar[2].id);
-    const [synth, setSynth] = useState(SETTINGS.synth[2].id);
+    const [Idrum, setDrum] = useState(2);
+    const [Iguitar, setGuitar] = useState(2);
+    const [Isynth, setSynth] = useState(2);
     const [musics, setMusics] = useState([]);
+
+    const drum = SETTINGS.drum[Idrum].id;
+    const guitar = SETTINGS.guitar[Iguitar].id;
+    const synth = SETTINGS.synth[Isynth].id;
 
     const playingTracks = useMemo(() => {
         if (!player) return [];
@@ -53,9 +57,9 @@ const Home = () => {
 
         const maxLen = () => {
             const len =
-                list[0].length > list[1].length
-                    ? list[0].length
-                    : list[1].length;
+                list[1]?.length > list[0]?.length
+                    ? list[1]?.length
+                    : list[0]?.length;
 
             return list[2]?.length > len ? list[2]?.length : len;
         };
@@ -70,7 +74,7 @@ const Home = () => {
         return arr;
     }, [player, drum, guitar, synth]);
 
-    const handleDrum = (_drum) => {
+    const handleDrum = (_drum, i) => {
         if (drum == _drum) return;
 
         const track = player.tracks.find((item) => item.name == `drum-${drum}`);
@@ -84,10 +88,10 @@ const Home = () => {
         if (newtrack) {
             ee.emit("mute", newtrack);
         }
-        setDrum(_drum);
+        setDrum(i);
     };
 
-    const handleGuiter = (_guiter) => {
+    const handleGuiter = (_guiter, i) => {
         if (guitar == _guiter) return;
 
         const track = player.tracks.find(
@@ -103,10 +107,10 @@ const Home = () => {
         if (newtrack) {
             ee.emit("mute", newtrack);
         }
-        setGuitar(_guiter);
+        setGuitar(i);
     };
 
-    const handleSynth = (_synth) => {
+    const handleSynth = (_synth, i) => {
         if (synth == _synth) return;
 
         const track = player.tracks.find(
@@ -122,7 +126,7 @@ const Home = () => {
         if (newtrack) {
             ee.emit("mute", newtrack);
         }
-        setSynth(_synth);
+        setSynth(i);
     };
 
     const handleFetchMusics = async () => {

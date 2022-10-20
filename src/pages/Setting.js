@@ -65,7 +65,7 @@ const Setting = (props) => {
                                         }}
                                     >
                                         <Button
-                                            onClick={() => setDrum(item.id)}
+                                            onClick={() => setDrum(item.id, index)}
                                             sx={{
                                                 background:
                                                     item.id == drum
@@ -122,7 +122,7 @@ const Setting = (props) => {
                                         }}
                                     >
                                         <Button
-                                            onClick={() => setGuitar(item.id)}
+                                            onClick={() => setGuitar(item.id, index)}
                                             sx={{
                                                 background:
                                                     item.id == guitar
@@ -179,7 +179,7 @@ const Setting = (props) => {
                                         }}
                                     >
                                         <Button
-                                            onClick={() => setSynth(item.id)}
+                                            onClick={() => setSynth(item.id, index)}
                                             sx={{
                                                 background:
                                                     item.id == synth
