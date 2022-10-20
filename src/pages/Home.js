@@ -270,6 +270,7 @@ const Home = () => {
                 currentTime={currentTime}
                 playingTracks={playingTracks}
                 duration={player ? player.duration : 0}
+                insts={{ Idrum, Iguitar, Isynth }}
             />
             <Setting
                 drum={drum}

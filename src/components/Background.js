@@ -28,27 +28,37 @@ const initialData = {
 
 const MyGroup = (props) => {
     const [data, setData] = useState(initialData);
-    const { playing, playingTracks, currentTime, duration } = props;
+    const { playing, playingTracks, currentTime, duration, insts } = props;
 
     useEffect(() => {
         let timer;
         let _ct = currentTime;
+        let _s = true;
+
         if (playing) {
             timer = setInterval(() => {
-                const _n =
+                let _n = Math.abs(
                     playingTracks[
                         parseInt(playingTracks.length * (_ct / duration), 10)
-                    ] / 10000 || 0;
+                    ] / 100000 || 0
+                );
 
                 setData((prev) => ({
                     ...prev,
-                    widthSegments: initialData.widthSegments + _n,
-                    phiLength: initialData.phiLength + _n,
-                    thetaStart: initialData.thetaStart + _n,
-                    thetaLength: initialData.thetaLength + _n,
+                    widthSegments:
+                        initialData.widthSegments +
+                        _n +
+                        (insts.Isynth + insts.Iguitar) / 10,
+                    // phiLength: initialData.phiLength + _n,
+                    thetaStart:
+                        (_s ? 0 : Math.PI) + Math.abs(_n + insts.Idrum / 10),
+                    thetaLength:
+                        initialData.thetaLength -
+                        Math.abs(_n + insts.Idrum / 10),
                 }));
-                _ct += 1 / (playingTracks.length / duration);
-            }, 1000 / (playingTracks.length / duration));
+                _ct += 2 / (playingTracks.length / duration);
+                _s = !_s;
+            }, 2000 / (playingTracks.length / duration));
         } else {
             setData(initialData);
         }
@@ -56,7 +66,7 @@ const MyGroup = (props) => {
         return () => {
             clearInterval(timer);
         };
-    }, [playingTracks, playing, duration]);
+    }, [playingTracks, playing, duration, insts]);
 
     const groupRef = useRef(null);
 
