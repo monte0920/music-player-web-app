@@ -28,49 +28,62 @@ const initialData = {
 
 const MyGroup = (props) => {
     const [data, setData] = useState(initialData);
-    const { playing, playingTracks, currentTime, duration, insts } = props;
-
+    // const { playing, playingTracks, currentTime, duration, insts } = props;
+    const { playing, insts } = props;
+    console.log(data);
     useEffect(() => {
-        let timer;
-        let _ct = currentTime;
-        let _s = true;
-
         if (playing) {
-            timer = setInterval(() => {
-                let _n = Math.abs(
-                    playingTracks[
-                        parseInt(playingTracks.length * (_ct / duration), 10)
-                    ] / 100000 || 0
-                );
-
-                const _ws = insts.Iguitar + insts.Isynth;
-
-                setData((prev) => ({
-                    ...prev,
-                    widthSegments:
-                        initialData.widthSegments +
-                        (_s ? Math.abs(_n) + _ws : -(Math.abs(_n) + _ws)) +
-                        (insts.Iguitar + insts.Isynth),
-                    // phiLength: initialData.phiLength + _n,
-                    thetaStart:
-                        (_s ? 0 : Math.PI) +
-                        Math.abs(_n * (1 + insts.Idrum / 10)),
-
-                    thetaLength:
-                        initialData.thetaLength -
-                        Math.abs(_n * (1 + insts.Idrum / 10)) * 2,
-                }));
-                _ct += 2 / (playingTracks.length / duration);
-                _s = !_s;
-            }, 2000 / (playingTracks.length / duration));
+            setData({
+                ...data,
+                thetaStart: initialData.thetaStart + insts.Idrum + 2,
+                widthSegments: initialData.widthSegments + insts.Iguitar * 10,
+            });
         } else {
             setData(initialData);
         }
+    }, [insts, playing]);
 
-        return () => {
-            clearInterval(timer);
-        };
-    }, [playingTracks, playing, duration, insts]);
+    // useEffect(() => {
+    //     let timer;
+    //     let _ct = currentTime;
+    //     let _s = true;
+
+    //     if (playing) {
+    //         timer = setInterval(() => {
+    //             let _n = Math.abs(
+    //                 playingTracks[
+    //                     parseInt(playingTracks.length * (_ct / duration), 10)
+    //                 ] / 100000 || 0
+    //             );
+
+    //             const _ws = insts.Iguitar + insts.Isynth;
+
+    //             setData((prev) => ({
+    //                 ...prev,
+    //                 widthSegments:
+    //                     initialData.widthSegments +
+    //                     (_s ? Math.abs(_n) + _ws : -(Math.abs(_n) + _ws)) +
+    //                     (insts.Iguitar + insts.Isynth),
+    //                 // phiLength: initialData.phiLength + _n,
+    //                 thetaStart:
+    //                     (_s ? 0 : Math.PI) +
+    //                     Math.abs(_n * (1 + insts.Idrum / 10)),
+
+    //                 thetaLength:
+    //                     initialData.thetaLength -
+    //                     Math.abs(_n * (1 + insts.Idrum / 10)) * 2,
+    //             }));
+    //             _ct += 2 / (playingTracks.length / duration);
+    //             _s = !_s;
+    //         }, 2000 / (playingTracks.length / duration));
+    //     } else {
+    //         setData(initialData);
+    //     }
+
+    //     return () => {
+    //         clearInterval(timer);
+    //     };
+    // }, [playingTracks, playing, duration, insts]);
 
     const groupRef = useRef(null);
 
