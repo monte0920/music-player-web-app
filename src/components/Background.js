@@ -29,19 +29,14 @@ const initialData = {
 const MyGroup = (props) => {
     const [data, setData] = useState(initialData);
     // const { playing, playingTracks, currentTime, duration, insts } = props;
-    const { playing, insts } = props;
-    console.log(data);
+    const { insts } = props;
     useEffect(() => {
-        if (playing) {
-            setData({
-                ...data,
-                thetaStart: initialData.thetaStart + insts.Idrum + 2,
-                widthSegments: initialData.widthSegments + insts.Iguitar * 10,
-            });
-        } else {
-            setData(initialData);
-        }
-    }, [insts, playing]);
+        setData({
+            ...data,
+            thetaStart: initialData.thetaStart + insts.Idrum + 2,
+            widthSegments: initialData.widthSegments + insts.Iguitar * 10,
+        });
+    }, [insts]);
 
     // useEffect(() => {
     //     let timer;
